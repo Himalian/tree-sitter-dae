@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "dae",
+      "camelcase": "Dae",
+      "title": "Dae",
+      "scope": "source.dae",
+      "file-types": [
+        "dae"
+      ],
+      "injection-regex": "^dae$",
+      "class-name": "TreeSitterDae"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "BSD",
+    "description": "Dae grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Himalian",
+        "url": ""
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-dae",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "java": false,
+    "node": true,
+    "python": false,
+    "rust": false,
+    "swift": false,
+    "zig": false
+  }
+}

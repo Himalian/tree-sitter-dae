@@ -1,0 +1,5 @@
+global {
+	# comment
+	log_level: info
+	print(hello)
+}
