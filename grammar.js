@@ -13,21 +13,53 @@ export default grammar({
 	extras: ($) => [/\s/, $.comment],
 	rules: {
 		// source_file is composed of blocks
-		source_file: ($) => repeat($.block),
-		// block
-		// global {
+		source_file: ($) =>
+			// choice(optional($.global), optional($.routing), repeat($.block)),
+			repeat($.block),
+		// The `global` configuration block
+		global: ($) =>
+			seq(
+				"global",
+				"{",
+				repeat(
+					choice($.key_value, $.function_call, $.rules, $.block, $.string),
+				),
+				"}",
+			),
+		// routing {
+		// something...
+		// }
+		routing: ($) =>
+			seq(
+				"routing",
+				"{",
+				repeat(
+					choice($.key_value, $.function_call, $.rules, $.block, $.string),
+				),
+				"}",
+			),
+		// block {
 		// something...
 		// }
 		block: ($) =>
 			seq(
 				field("name", $.identifier),
 				"{",
-				repeat(choice($.key_value, $.function_call, $.rules, $.block)),
+				repeat(
+					choice($.key_value, $.function_call, $.rules, $.block, $.string),
+				),
 				"}",
 			),
 		// key_value: log_level: info
 		key_value: ($) =>
-			seq(field("key", $.identifier), ":", field("value", $._value)),
+			prec(
+				1,
+				seq(
+					field("key", $.identifier),
+					":",
+					field("value", choice($._value, $.rules, $.expression)),
+				),
+			),
 
 		// function call: function_name(argument_a, argument_b, ...)
 		function_call: ($) =>
@@ -46,15 +78,18 @@ export default grammar({
 		_argument: ($) => choice($._value, $.function_call, $.key_value),
 
 		_value: ($) =>
+			// complex tokens should be tried first
 			choice(
-				$.identifier,
-				$.numbers,
-				$.string,
-				$.boolean,
 				$.cidr,
 				$.ip_address,
 				$.url,
 				$.unix_path,
+
+				$.identifier,
+				$.numbers,
+				$.time,
+				$.string,
+				$.boolean,
 			),
 
 		// basic tokens
@@ -64,6 +99,10 @@ export default grammar({
 		comment: (_) => token(seq("#", /.*/)),
 
 		numbers: (_) => /\d+/,
+
+		// 25s, 15ms, 7d
+		time: (_) =>
+			token(seq(/\d+/, choice("ms", "s", "min", "h", "d", "m", "w"))),
 		// string: "string" or 'string'
 		string: (_) =>
 			choice(
@@ -86,11 +125,14 @@ export default grammar({
 		// url: https://example.com, vmess://example.com, trojan://example.com:25565,
 		// file:///home/butter/example.dae, tcp+udp://dns.example.com:53
 		url: ($) =>
-			seq(
-				field("scheme", /[a-zA-Z][a-zA-Z0-9+.-]*/),
-				"://",
-				field("host", /[a-zA-Z0-9._/-]+/),
-				optional(seq(":", field("port", $.numbers))),
+			prec(
+				2, // url schema like https shoule have higher priority than identifier
+				seq(
+					field("scheme", /[a-zA-Z][a-zA-Z0-9+.-]*/),
+					"://",
+					field("host", /[a-zA-Z0-9._/-]+/),
+					optional(seq(":", field("port", $.numbers))),
+				),
 			),
 
 		// cidr: 224.0.0.0/3
