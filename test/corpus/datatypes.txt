@@ -1,0 +1,51 @@
+==================
+Test data types
+==================
+
+block {
+    key: value
+    url: https://example.com:8080
+    number: 123
+    time: 15h
+    boolean: true
+    string: "hello world"
+    object: {
+        key1: value1
+        key2: value2
+    }
+}
+
+---
+
+(source_file
+  (block
+    name: (identifier)
+    (key_value
+      key: (identifier)
+      value: (identifier))
+    (key_value
+      key: (identifier)
+      value: (identifier))
+    (ERROR
+      (numbers))
+    (key_value
+      key: (identifier)
+      value: (numbers))
+    (key_value
+      key: (identifier)
+      value: (time))
+    (key_value
+      key: (identifier)
+      value: (boolean))
+    (key_value
+      key: (identifier)
+      value: (string))
+    (block
+      name: (identifier)
+      (ERROR)
+      (key_value
+        key: (identifier)
+        value: (identifier))
+      (key_value
+        key: (identifier)
+        value: (identifier)))))

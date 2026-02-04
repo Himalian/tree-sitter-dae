@@ -1,0 +1,31 @@
+==================
+Test Blocks
+==================
+group {
+    singapore {
+        filter: subtag(windbird) && name(keyword: '🇸🇬')
+        policy: min_moving_avg
+    }
+}
+
+---
+(source_file
+  (block
+    name: (identifier)
+    (block
+      name: (identifier)
+      (key_value
+        key: (identifier)
+        value: (expression
+          (function_call
+            function_name: (identifier)
+            argument: (identifier))
+          (logic_operator)
+          (function_call
+            function_name: (identifier)
+            argument: (key_value
+              key: (identifier)
+              value: (string)))))
+      (key_value
+        key: (identifier)
+        value: (identifier)))))
