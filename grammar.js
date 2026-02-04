@@ -12,8 +12,6 @@ export default grammar({
 
 	extras: ($) => [/\s/, $.comment],
 	rules: {
-		// TODO: add the actual grammar rules
-
 		// source_file is composed of blocks
 		source_file: ($) => repeat($.block),
 		// block
@@ -24,7 +22,7 @@ export default grammar({
 			seq(
 				field("name", $.identifier),
 				"{",
-				repeat(choice($.key_value, $.function_call, $.rules)),
+				repeat(choice($.key_value, $.function_call, $.rules, $.block)),
 				"}",
 			),
 		// key_value: log_level: info
@@ -44,7 +42,7 @@ export default grammar({
 				),
 				")",
 			),
-		
+
 		_argument: ($) => choice($._value, $.function_call, $.key_value),
 
 		_value: ($) =>
@@ -53,20 +51,25 @@ export default grammar({
 				$.numbers,
 				$.string,
 				$.boolean,
-				$.url,
+				$.cidr,
 				$.ip_address,
+				$.url,
 				$.unix_path,
 			),
 
 		// basic tokens
 
-		identifier: (_) => /[a-zA-Z_]+/,
+		identifier: (_) => /[a-zA-Z_][a-zA-Z0-9_]*/,
 		// comment: # This is a comment
 		comment: (_) => token(seq("#", /.*/)),
 
 		numbers: (_) => /\d+/,
 		// string: "string" or 'string'
-		string: (_) => seq('"', repeat(choice(/[^"]/, /\\./)), '"'),
+		string: (_) =>
+			choice(
+				seq('"', repeat(choice(/[^"]/, /\\./)), '"'),
+				seq("'", repeat(choice(/[^']/, /\\./)), "'"),
+			),
 		boolean: (_) => choice("true", "false"),
 
 		// dae specific tokens
@@ -80,28 +83,37 @@ export default grammar({
 				),
 			),
 
-		// url: https://example.com, vmess://example.com, trojan://example.com:25565, file:///home/butter/example.dae
+		// url: https://example.com, vmess://example.com, trojan://example.com:25565,
+		// file:///home/butter/example.dae, tcp+udp://dns.example.com:53
 		url: ($) =>
 			seq(
-				field("scheme", $.identifier),
+				field("scheme", /[a-zA-Z][a-zA-Z0-9+.-]*/),
 				"://",
 				field("host", /[a-zA-Z0-9._/-]+/),
 				optional(seq(":", field("port", $.numbers))),
 			),
 
+		// cidr: 224.0.0.0/3
+		cidr: ($) => seq($.ip_address, "/", $.numbers),
+
 		// ip_address: 1.1.1.1
-		ip_address: ($) =>
-			seq($.numbers, ".", $.numbers, ".", $.numbers, ".", $.numbers),
+		ip_address: (_) => token(prec(2, /\d+\.\d+\.\d+\.\d+/)),
 
 		// port: 25565
 		port: ($) => $.numbers,
 
-		// rules: domain(suffix: google.com, keyword: youtube) -> proxy
+		// rules:
+		// domain(suffix: google.com, keyword: youtube) -> proxy
 		// rules can be composed via logic operators,
 		// example: domain(suffix: google.com, keyword: youtube) &&
-		// domain(suffix: apple.com, keyword: itunes) -> proxy
+		// !domain(suffix: apple.com, keyword: itunes) -> proxy
 		logic_operator: (_) => choice("&&", "||"),
 		rules: ($) => seq($.expression, "->", field("destination", $.identifier)),
-		expression: ($) => seq($.function_call, repeat(seq($.logic_operator, $.function_call))),
+		expression: ($) =>
+			seq(
+				optional("!"),
+				$.function_call,
+				repeat(seq($.logic_operator, optional("!"), $.function_call)),
+			),
 	},
 });
