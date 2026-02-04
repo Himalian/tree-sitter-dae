@@ -94,7 +94,7 @@ export default grammar({
 
 		// basic tokens
 
-		identifier: (_) => /[a-zA-Z_][a-zA-Z0-9_]*/,
+		identifier: (_) => /[a-zA-Z_][a-zA-Z0-9_@-]*/,
 		// comment: # This is a comment
 		comment: (_) => token(seq("#", /.*/)),
 

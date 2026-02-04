@@ -3,7 +3,7 @@ Test Routing rules
 ==================
 
 route {
-    pname(steam) -> direct
+    domain(geosite:steam@cn) -> direct
     # support complex rules composition
     domain(keyword: youtube) && domain(geoip:google) -> proxy
     !domain(geoip:cn) -> proxy
@@ -18,7 +18,9 @@ route {
       (expression
         (function_call
           function_name: (identifier)
-          argument: (identifier)))
+          argument: (key_value
+            key: (identifier)
+            value: (identifier))))
       destination: (identifier))
     (comment)
     (rules
