@@ -22,7 +22,12 @@ This project is a [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) gram
 Install the project dependencies:
 
 ```bash
+# use mise(recommend)
+mise exec nodejs@22 -- npm install
+# or use npm
 npm install
+# bun is faster, but it may too new to support tree-sitter
+bun install
 ```
 
 ### Building the Parser
@@ -30,15 +35,17 @@ npm install
 After modifying `grammar.js`, you must regenerate the C parser:
 
 ```bash
-npx tree-sitter generate
+tree-sitter generate
 ```
 
 To build the WASM parser for the web playground:
 
 ```bash
-npx tree-sitter build --wasm
+tree-sitter build --wasm
 ```
-
+### parse specific file
+```bash
+tree-sitter parse example.dae
 ### Running Tests
 
 Run the Tree-sitter corpus tests:
@@ -46,7 +53,7 @@ Run the Tree-sitter corpus tests:
 ```bash
 npm test
 # OR directly via CLI
-npx tree-sitter test
+tree-sitter test
 ```
 
 ### Interactive Playground

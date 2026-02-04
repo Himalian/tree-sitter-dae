@@ -1,5 +1,17 @@
 global {
-	# comment
+	# This is a comment
 	log_level: info
-	print(hello)
+	print(hello, from, dae)
+}
+
+dns {
+	nameserver: 1.1.1.1
+	upstream: https://dns.google/dns-query
+	fallback: tcp+udp://dns.quad9.net/dns-query
+}
+
+routing {
+	# site: file:///usr/share/dae/site.dat
+	domain(suffix: google.com, keyword: youtube) -> proxy
+	domain(suffix: apple.com, keyword: itunes) && domain(geoip: spotify) -> proxy
 }
