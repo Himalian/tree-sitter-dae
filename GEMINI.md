@@ -77,6 +77,7 @@ npm start
 ## Development Workflow
 
 1.  **Edit Grammar:** Modify `grammar.js` to add or change rules.
-2.  **Generate:** Run `npx tree-sitter generate` to update the C parser.
-3.  **Test:** Run `npx tree-sitter test` to verify changes against the corpus.
-4.  **Visualize:** Use `npm start` to see the parse tree in real-time.
+2.  **Generate:** Run `tree-sitter generate` to update the C parser.
+3.  **Test:** Run `tree-sitter test` to verify changes against the corpus.
+4.  **validation**: Run `tree-sitter parse example.dae` to verify the grammar works as expected.
+5.  **Visualize:** Use `npm start` to see the parse tree in real-time.
