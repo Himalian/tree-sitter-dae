@@ -130,8 +130,9 @@ export default grammar({
 				seq(
 					/[a-zA-Z][a-zA-Z0-9+.-]*/,
 					"://",
-					/[a-zA-Z0-9._/-]+/,
+					optional(/[a-zA-Z0-9._~%-]+/),
 					optional(seq(":", /\d+/)),
+					optional(/[a-zA-Z0-9._/~%&=?+#@!$*':;-]*/),
 				),
 			),
 

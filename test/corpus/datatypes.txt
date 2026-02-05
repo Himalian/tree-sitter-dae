@@ -4,7 +4,9 @@ Test data types
 
 block {
     key: value
-    url: https://example.com:8080
+	# parse url with paramaters
+    url: https://example.com:8080/?username=Himalian
+    complex_url: https://subscribe.example.com/api/v1/client/subscribe?token=mytoken
     number: 123
     time: 15h
     boolean: true
@@ -23,6 +25,10 @@ block {
     (key_value
       key: (identifier)
       value: (identifier))
+	(comment)
+    (key_value
+      key: (identifier)
+      value: (url))
     (key_value
       key: (identifier)
       value: (url))
