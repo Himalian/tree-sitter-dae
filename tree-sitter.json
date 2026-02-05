@@ -13,18 +13,17 @@
 		}
 	],
 	"metadata": {
-		"version": "0.1.0",
+		"version": "0.2.0",
 		"license": "BSD",
 		"description": "Dae grammar for tree-sitter",
 		"authors": [
 			{
 				"name": "Himalian",
-				"url": ""
+				"url": "https://Himalian.github.io"
 			}
 		],
 		"links": {
-			"repository": "https://github.com/tree-sitter/tree-sitter-dae",
-			"funding": ""
+			"repository": "https://github.com/Himalian/tree-sitter-dae"
 		}
 	},
 	"bindings": {
