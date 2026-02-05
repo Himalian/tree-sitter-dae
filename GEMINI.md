@@ -35,7 +35,10 @@ bun install
 After modifying `grammar.js`, you must regenerate the C parser:
 
 ```bash
+# use tree-sitter-cli
 tree-sitter generate
+# or use just
+just generate
 ```
 
 To build the WASM parser for the web playground:
@@ -46,12 +49,14 @@ tree-sitter build --wasm
 ### parse specific file
 ```bash
 tree-sitter parse example.dae
+# or use just
+just parse example.dae
 ### Running Tests
 
 Run the Tree-sitter corpus tests:
 
 ```bash
-npm test
+just test
 # OR directly via CLI
 tree-sitter test
 ```

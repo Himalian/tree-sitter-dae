@@ -82,7 +82,8 @@ export default grammar({
 			choice(
 				$.cidr,
 				$.ip_address,
-				$.url,
+				// url should have higher priority
+				prec(2, $.url),
 				$.unix_path,
 
 				$.identifier,
@@ -124,14 +125,13 @@ export default grammar({
 
 		// url: https://example.com, vmess://example.com, trojan://example.com:25565,
 		// file:///home/butter/example.dae, tcp+udp://dns.example.com:53
-		url: ($) =>
-			prec(
-				2, // url schema like https shoule have higher priority than identifier
+		url: (_) =>
+			token(
 				seq(
-					field("scheme", /[a-zA-Z][a-zA-Z0-9+.-]*/),
+					/[a-zA-Z][a-zA-Z0-9+.-]*/,
 					"://",
-					field("host", /[a-zA-Z0-9._/-]+/),
-					optional(seq(":", field("port", $.numbers))),
+					/[a-zA-Z0-9._/-]+/,
+					optional(seq(":", /\d+/)),
 				),
 			),
 

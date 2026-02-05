@@ -25,9 +25,7 @@ block {
       value: (identifier))
     (key_value
       key: (identifier)
-      value: (identifier))
-    (ERROR
-      (numbers))
+      value: (url))
     (key_value
       key: (identifier)
       value: (numbers))
